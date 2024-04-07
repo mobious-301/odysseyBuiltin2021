@@ -45,7 +45,10 @@ namespace PLAYERTWO.PlatformerProject
 
 			foreach (var typeName in array)
 			{
-				list.Add(CreateFromString(typeName));
+                // Debug.Log(System.Type.GetType("PLAYERTWO.PlatformerProject."+typeName));
+                if(System.Type.GetType("PLAYERTWO.PlatformerProject."+typeName)!=null)
+            {
+				list.Add(CreateFromString("PLAYERTWO.PlatformerProject."+typeName));}
 			}
 
 			return list;

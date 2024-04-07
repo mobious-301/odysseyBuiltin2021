@@ -42,6 +42,17 @@ namespace PLAYERTWO.PlatformerProject
 				current = m_list[0];
 			}
 		}
+        protected virtual void Start()
+		{
+			InitializeStates();
+        }
+
+
+
+
+
+
+
     }
     
 }
