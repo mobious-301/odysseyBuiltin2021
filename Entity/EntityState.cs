@@ -4,7 +4,9 @@ using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.Events;
 
-public abstract class EntityState<T> where T : Entity<T>
+namespace PLAYERTWO.PlatformerProject
+{
+    public abstract class EntityState<T> where T : Entity<T>
 {
     public UnityEvent onEnter;
     public UnityEvent onExit;
@@ -35,6 +37,8 @@ public abstract class EntityState<T> where T : Entity<T>
 			return (EntityState<T>)System.Activator
 				.CreateInstance(System.Type.GetType(typeName));
 		}
+
+
         public static List<EntityState<T>> CreateListFromStringArray(string[] array)
 		{
 			var list = new List<EntityState<T>>();
@@ -46,4 +50,5 @@ public abstract class EntityState<T> where T : Entity<T>
 
 			return list;
 		}
+}
 }

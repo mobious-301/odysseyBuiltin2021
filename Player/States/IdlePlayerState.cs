@@ -7,6 +7,7 @@ namespace PLAYERTWO.PlatformerProject
     {
         protected override void OnEnter(Player entity)
         {
+            
             throw new System.NotImplementedException();
         }
 
