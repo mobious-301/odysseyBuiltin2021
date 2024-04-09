@@ -82,7 +82,7 @@ namespace PLAYERTWO.PlatformerProject
 
         public virtual void Accelerate(Vector3 direction, float turningDrag, float acceleration, float topSpeed)
         {
-            Debug.Log(direction);
+            // Debug.Log(direction);
             if (direction.sqrMagnitude > 0)
             {
                 var speed = Vector3.Dot(direction, lateralVelocity);
@@ -149,6 +149,12 @@ namespace PLAYERTWO.PlatformerProject
                 transform.rotation = Quaternion.RotateTowards(rotation, target, rotationDelta);
             }
         }
+
+        public Vector3 verticalVelocity//垂直速度
+		{
+			get { return new Vector3(0, velocity.y, 0); }
+			set { velocity = new Vector3(velocity.x, value.y, velocity.z); }
+		}
 
 
     }

@@ -18,7 +18,7 @@ namespace PLAYERTWO.PlatformerProject
         protected override void OnStep(Player player)
         {
             var inputDirection = player.inputs.GetMovementCameraDirection();//获取相机空间水平输入 //控制器输入 操作  世界空间方向  //输入目标水平方向
-            Debug.Log(inputDirection);
+            // Debug.Log(inputDirection);
 
 			if (inputDirection.sqrMagnitude > 0)
 			{
@@ -26,7 +26,7 @@ namespace PLAYERTWO.PlatformerProject
 
 				if (dot >= player.stats.current.brakeThreshold||dot>-10)//大于默认阈值 //默认实现是反方向加速时 触发刹车。添加dot>-10直接转向
 				{
-                    Debug.Log(inputDirection);
+                    // Debug.Log(inputDirection);
 					player.Accelerate(inputDirection);//加速 和 方向控制
                     // Debug.Log(player.lateralVelocity);
 					player.FaceDirectionSmooth(player.lateralVelocity);//当前方向到目标 水平方向的平滑

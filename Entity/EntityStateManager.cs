@@ -83,6 +83,10 @@ namespace PLAYERTWO.PlatformerProject
 			}
 		}
 
+		///for animator
+		public int index => m_list.IndexOf(current);
+		public int lastIndex => m_list.IndexOf(last);
+
 
 
 
