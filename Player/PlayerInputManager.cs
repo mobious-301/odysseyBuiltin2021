@@ -56,10 +56,7 @@ public class PlayerInputManager : MonoBehaviour
     protected virtual void OnDisable() => actions?.Disable();
 
     // Update is called once per frame
-    void Update()
-    {
 
-    }
     //获取移动方向
     public virtual Vector3 GetMovementDirection()
     {
@@ -93,4 +90,31 @@ public class PlayerInputManager : MonoBehaviour
     }
     public virtual bool GetRun() => m_run.IsPressed();
     public virtual bool GetRunUp() => m_run.WasReleasedThisFrame();
+    protected float? m_lastJumpTime;
+    protected const float k_jumpBuffer = 0.15f;
+    public virtual bool GetJumpDown()
+    {
+        if (m_lastJumpTime != null &&
+            Time.time - m_lastJumpTime < k_jumpBuffer)
+        {
+            m_lastJumpTime = null;
+            return true;
+        }
+
+        return false;
+    }
+
+    public virtual void LockMovementDirection(float duration = 0.25f)
+    {
+        m_movementDirectionUnlockTime = Time.time + duration;
+    }
+    void Update()
+    {
+        if (m_jump.WasPressedThisFrame())
+        {
+            m_lastJumpTime = Time.time;
+        }
+
+    }
+
 }

@@ -17,12 +17,28 @@ namespace PLAYERTWO.PlatformerProject
 
         protected override void OnStep(Player player)
         {
-            player.Decelerate();
-            if (player.lateralVelocity.sqrMagnitude == 0)
+            var inputDirection = player.inputs.GetMovementCameraDirection();
+			if (player.stats.current.canBackflip &&
+				Vector3.Dot(inputDirection, player.transform.forward) < 0 
+				&& player.inputs.GetJumpDown()
+                )
+			{
+                Debug.Log(player.inputs.GetJumpDown());
+				player.Backflip(player.stats.current.backflipBackwardTurnForce);//后空翻，力添加
+			}
+			else
+			{
+                
+				// player.SnapToGround();
+				// player.Jump();
+				// player.Fall();
+				player.Decelerate();
+
+				if (player.lateralVelocity.sqrMagnitude == 0)
 				{
 					player.states.Change<IdlePlayerState>();
 				}
-            // throw new System.NotImplementedException();
+			}
         }
     }
 }

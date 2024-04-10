@@ -53,6 +53,7 @@ namespace PLAYERTWO.PlatformerProject
 
         public virtual void Change<TState>() where TState : EntityState<T>
 		{
+			Debug.Log(typeof(TState));
 			var type = typeof(TState);
 
 			if (m_states.ContainsKey(type))

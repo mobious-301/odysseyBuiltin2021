@@ -17,6 +17,7 @@ namespace PLAYERTWO.PlatformerProject
 
         protected override void OnStep(Player player)
         {
+            player.Gravity();
             var inputDirection = player.inputs.GetMovementCameraDirection();//获取相机空间水平输入 //控制器输入 操作  世界空间方向  //输入目标水平方向
             // Debug.Log(inputDirection);
 
@@ -38,13 +39,12 @@ namespace PLAYERTWO.PlatformerProject
 			}
             else
 			{
-				player.Friction();
+				player.Friction();//减速
 
 				if (player.lateralVelocity.sqrMagnitude <= 0)
 				{
 					player.states.Change<IdlePlayerState>();
 				}
-                // player.states.Change<IdlePlayerState>();
 			}
             // throw new System.NotImplementedException();
         }

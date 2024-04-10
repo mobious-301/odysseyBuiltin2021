@@ -16,6 +16,8 @@ namespace PLAYERTWO.PlatformerProject
         //Entity 的 Update()对状态进行调用
         protected override void OnStep(Player player)
         {
+            player.Gravity();
+            player.Friction();
             // Debug.Log(player);
             var inputDirection = player.inputs.GetMovementDirection();
             if (inputDirection.sqrMagnitude > 0 || player.lateralVelocity.sqrMagnitude > 0)

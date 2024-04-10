@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+// using UnityEngine.Splines;
 namespace PLAYERTWO.PlatformerProject
 {
     public abstract class Entity : MonoBehaviour
@@ -20,8 +21,123 @@ namespace PLAYERTWO.PlatformerProject
         }
         protected virtual void Update()
         {
-            HandleStates();
-            HandleController();
+            if (controller.enabled)
+            {
+                HandleStates();
+                HandleController();
+                // HandleSpline();
+                HandleGround();
+                // HandleContacts();
+                // OnUpdate();
+            }
+        }
+        protected readonly float m_groundOffset = 0.1f;
+        protected readonly float m_penetrationOffset = -0.1f;
+        protected readonly float m_slopingGroundAngle = 20f;
+        public Vector3 center => controller.center;
+        public Vector3 position => transform.position + center;
+        public float radius => controller.radius;
+        public virtual bool SphereCast(Vector3 direction, float distance,
+            out RaycastHit hit, int layer = Physics.DefaultRaycastLayers,
+            QueryTriggerInteraction queryTriggerInteraction = QueryTriggerInteraction.Ignore)
+        {
+            var castDistance = Mathf.Abs(distance - radius);
+            return Physics.SphereCast(position, radius, direction,
+                out hit, castDistance, layer, queryTriggerInteraction);
+        }
+
+        public virtual bool SphereCast(Vector3 direction, float distance, int layer = Physics.DefaultRaycastLayers,
+            QueryTriggerInteraction queryTriggerInteraction = QueryTriggerInteraction.Ignore)
+        {
+            return SphereCast(direction, distance, out _, layer, queryTriggerInteraction);
+        }
+        public virtual bool canStandUp => !SphereCast(Vector3.up, originalHeight);
+
+
+
+        public Vector3 stepPosition => position - transform.up * (height * 0.5f - controller.stepOffset);
+        public virtual bool IsPointUnderStep(Vector3 point) => stepPosition.y > point.y;
+        protected virtual bool EvaluateLanding(RaycastHit hit)
+        {
+            return IsPointUnderStep(hit.point) && Vector3.Angle(hit.normal, Vector3.up) < controller.slopeLimit;
+        }
+
+        public float lastGroundTime { get; protected set; }
+        // public EntityEvents entityEvents;
+        public bool isGrounded { get; protected set; }
+        protected virtual void ExitGround()
+        {
+            if (isGrounded)
+            {
+                isGrounded = false;
+                transform.parent = null;
+                lastGroundTime = Time.time;
+                verticalVelocity = Vector3.Max(verticalVelocity, Vector3.zero);
+                // entityEvents.OnGroundExit?.Invoke();
+            }
+        }
+        public RaycastHit groundHit;
+        protected virtual void EnterGround(RaycastHit hit)
+        {
+            if (!isGrounded)
+            {
+                groundHit = hit;
+                isGrounded = true;
+                // entityEvents.OnGroundEnter?.Invoke();
+            }
+        }
+        protected virtual void HandleHighLedge(RaycastHit hit) { }
+        
+		public Vector3 groundNormal { get; protected set; }
+        		public Vector3 localSlopeDirection { get; protected set; }
+        		protected virtual void UpdateGround(RaycastHit hit)
+		{
+			if (isGrounded)
+			{
+				groundHit = hit;
+				groundNormal = groundHit.normal;
+				groundAngle = Vector3.Angle(Vector3.up, groundHit.normal);
+				localSlopeDirection = new Vector3(groundNormal.x, 0, groundNormal.z).normalized;
+				// transform.parent = hit.collider.CompareTag(GameTags.Platform) ? hit.transform : null;
+			}
+		}
+        protected virtual void HandleGround()
+        {
+            if (onRails) return;
+
+            var distance = (height * 0.5f) + m_groundOffset;
+
+            if (SphereCast(Vector3.down, distance, out var hit) && verticalVelocity.y <= 0)
+            {
+                if (!isGrounded)
+                {
+                    if (EvaluateLanding(hit))
+                    {
+                        EnterGround(hit);
+                    }
+                    else
+                    {
+                        HandleHighLedge(hit);
+                    }
+                }
+                else if (IsPointUnderStep(hit.point))
+                {
+                    UpdateGround(hit);
+
+                    if (Vector3.Angle(hit.normal, Vector3.up) >= controller.slopeLimit)
+                    {
+                        // HandleSlopeLimit(hit);
+                    }
+                }
+                else
+                {
+                    HandleHighLedge(hit);
+                }
+            }
+            else
+            {
+                ExitGround();
+            }
         }
         public CharacterController controller { get; protected set; }
         public float originalHeight { get; protected set; }
@@ -55,7 +171,7 @@ namespace PLAYERTWO.PlatformerProject
             get { return new Vector3(velocity.x, 0, velocity.z); }
             set { velocity = new Vector3(value.x, velocity.y, value.z); }
         }
-        public bool isGrounded { get; protected set; } = true;
+        public bool nisGrounded { get; protected set; } = true;
         public bool onRails { get; set; }
 
         public float accelerationMultiplier { get; set; } = 1f;
@@ -104,7 +220,7 @@ namespace PLAYERTWO.PlatformerProject
         }
 
         public float groundAngle { get; protected set; }
-        protected readonly float m_slopingGroundAngle = 20f;
+        // protected readonly float m_slopingGroundAngle = 20f;
         public float height => controller.height;
         public virtual bool OnSlopingGround()
         {
@@ -151,10 +267,26 @@ namespace PLAYERTWO.PlatformerProject
         }
 
         public Vector3 verticalVelocity//垂直速度
-		{
-			get { return new Vector3(0, velocity.y, 0); }
-			set { velocity = new Vector3(velocity.x, value.y, velocity.z); }
-		}
+        {
+            get { return new Vector3(0, velocity.y, 0); }
+            set { velocity = new Vector3(velocity.x, value.y, velocity.z); }
+        }
+
+        public virtual void Gravity(float gravity)
+        {
+            if (!isGrounded)
+            {
+                verticalVelocity += Vector3.down * gravity * gravityMultiplier * Time.deltaTime;
+            }
+        }
+
+        public virtual void SnapToGround(float force)
+        {
+            if (isGrounded && (verticalVelocity.y <= 0))
+            {
+                verticalVelocity = Vector3.down * force;
+            }
+        }
 
 
     }
