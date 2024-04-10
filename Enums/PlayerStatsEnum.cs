@@ -1,7 +1,14 @@
 public enum PlayerStatsEnum{
+    
+    IdlePlayerState,
+    WalkPlayerState,
+    BrakePlayerState,
+
+
+
+
     AirDivePlayerState,
     BackflipPlayerState,
-    BrakePlayerState,
     CrawlingPlayerState,
     CrouchPlayerState,
     DashPlayerState,
@@ -9,7 +16,6 @@ public enum PlayerStatsEnum{
     FallPlayerState,
     GlidingPlayerState,
     HurtPlayerState,
-    IdlePlayerState,
     LedgeClimbingPlayerState,
     LedgeHangingPlayerState,
     PoleClimbingPlayerState,
@@ -17,6 +23,5 @@ public enum PlayerStatsEnum{
     SpinPlayerState,
     StompPlayerState,
     SwimPlayerState,
-    WalkPlayerState,
     WallDragPlayerState
 }

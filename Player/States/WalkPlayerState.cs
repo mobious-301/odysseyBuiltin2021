@@ -24,16 +24,16 @@ namespace PLAYERTWO.PlatformerProject
 			{
 				var dot = Vector3.Dot(inputDirection, player.lateralVelocity);//输入方向在现在速度方向上的投影>-0.8，也就是非现在速度方向的正背面
 
-				if (dot >= player.stats.current.brakeThreshold||dot>-10)//大于默认阈值 //默认实现是反方向加速时 触发刹车。添加dot>-10直接转向
+				if (dot >= player.stats.current.brakeThreshold)//大于默认阈值 //默认实现是反方向加速时 触发刹车。添加dot>-10直接转向
 				{
                     // Debug.Log(inputDirection);
 					player.Accelerate(inputDirection);//加速 和 方向控制
                     // Debug.Log(player.lateralVelocity);
 					player.FaceDirectionSmooth(player.lateralVelocity);//当前方向到目标 水平方向的平滑
 				}
-				// else
+				else
 				{
-					// player.states.Change<BrakePlayerState>();
+					player.states.Change<BrakePlayerState>();
 				}
 			}
             else
