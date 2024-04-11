@@ -174,5 +174,34 @@ namespace PLAYERTWO.PlatformerProject
         }
         public virtual void SnapToGround() => SnapToGround(stats.current.snapForce);
 
+
+        public virtual void Jump(float height)
+		{
+			jumpCounter++;
+			verticalVelocity = Vector3.up * height;//垂直速度向上
+			states.Change<FallPlayerState>();
+			playerEvents.OnJump?.Invoke();
+		}
+
+        public virtual void Jump()//跳跃功能
+		{
+			var canMultiJump = (jumpCounter > 0) && (jumpCounter < stats.current.multiJumps);//多段跳
+			var canCoyoteJump = (jumpCounter == 0) && (Time.time < lastGroundTime + stats.current.coyoteJumpThreshold);
+			var holdJump = !holding || stats.current.canJumpWhileHolding;
+
+			if ((isGrounded || onRails || canMultiJump || canCoyoteJump) && holdJump)
+			{
+				if (inputs.GetJumpDown())
+				{
+					Jump(stats.current.maxJumpHeight);
+				}
+			}
+
+			if (inputs.GetJumpUp() && (jumpCounter > 0) && (verticalVelocity.y > stats.current.minJumpHeight))
+			{
+				verticalVelocity = Vector3.up * stats.current.minJumpHeight;
+			}
+		}
+
     }
 }

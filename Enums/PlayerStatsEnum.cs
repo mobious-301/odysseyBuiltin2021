@@ -1,27 +1,24 @@
-public enum PlayerStatsEnum{
-    
+public enum PlayerStatsEnum
+{
     IdlePlayerState,
     WalkPlayerState,
     BrakePlayerState,
-    BackflipPlayerState,
     FallPlayerState,
-
-
-
-
-    AirDivePlayerState,
-    CrawlingPlayerState,
-    CrouchPlayerState,
-    DashPlayerState,
-    DiePlayerState,
-    GlidingPlayerState,
     HurtPlayerState,
-    LedgeClimbingPlayerState,
-    LedgeHangingPlayerState,
+    DiePlayerState,
+    WallDragPlayerState,
     PoleClimbingPlayerState,
-    RailGrindPlayerState,
-    SpinPlayerState,
-    StompPlayerState,
     SwimPlayerState,
-    WallDragPlayerState
+    CrouchPlayerState,
+    CrawlingPlayerState,
+    SpinPlayerState,
+    AirDivePlayerState,
+    StompPlayerState,
+    LedgeHangingPlayerState,
+    LedgeClimbingPlayerState,
+    BackflipPlayerState,
+    GlidingPlayerState,
+    DashPlayerState,
+    RailGrindPlayerState,
+
 }

@@ -18,6 +18,8 @@ namespace PLAYERTWO.PlatformerProject
         protected override void OnStep(Player player)
         {
             player.Gravity();
+            player.SnapToGround();
+            player.Jump();
             var inputDirection = player.inputs.GetMovementCameraDirection();//获取相机空间水平输入 //控制器输入 操作  世界空间方向  //输入目标水平方向
             // Debug.Log(inputDirection);
 

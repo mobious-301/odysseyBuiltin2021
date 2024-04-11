@@ -117,4 +117,6 @@ public class PlayerInputManager : MonoBehaviour
 
     }
 
+    public virtual bool GetJumpUp() => m_jump.WasReleasedThisFrame();//新输入系统 up  被 WasReleasedThisFrame替代
+
 }

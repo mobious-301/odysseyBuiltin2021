@@ -16,6 +16,7 @@ namespace PLAYERTWO.PlatformerProject
         //Entity 的 Update()对状态进行调用
         protected override void OnStep(Player player)
         {
+            player.Jump();
             player.Gravity();
             player.Friction();
             // Debug.Log(player);
@@ -24,6 +25,7 @@ namespace PLAYERTWO.PlatformerProject
 			{
 				player.states.Change<WalkPlayerState>();
 			}
+            
 			// else if (player.inputs.GetCrouchAndCraw())
 			// {
 			// 	player.states.Change<CrouchPlayerState>();
